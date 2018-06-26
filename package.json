@@ -1,0 +1,20 @@
+{
+  "name": "cordova-plugin-screen-scraping",
+  "version": "1.0.0",
+  "description": "Page Scraping for cordova",
+  "cordova": {
+    "id": "cordova-plugin-screen-scraping",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "plugin",
+    "scraping",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Olegario Nascimento",
+  "license": "Apache-2"
+}
