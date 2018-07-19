@@ -138,7 +138,8 @@ public class Hello extends CordovaPlugin {
             pluginresult.setKeepCallback(false); 
             //mMyCallbackContext.sendPluginResult(pluginresult);
 
-            String message = "O Seu Saldo é de: " + result.getBalance() + " A la card";
+            //String message = "O Seu Saldo é de: " + result.getBalance() + " A la card";
+            String message = result.getBalance();
             mMyCallbackContext.success(message);
         }
     }
