@@ -1,9 +1,9 @@
 {
   "name": "cordova-plugin-hello",
   "version": "0.1.0",
-  "description": "A sample for a new cordova plugin",
+  "description": "Screen Scraping",
   "cordova": {
-    "id": "cordova-plugin-hello",
+    "id": "cordova-plugin-screen-scraping",
     "platforms": [
       "android",
       "ios",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/don/cordova-plugin-hello.git"
+    "url": "git+https://github.com/elrafael/cordova-plugin-screen-scraping.git"
   },
   "keywords": [
     "cordova",
@@ -21,10 +21,10 @@
     "ecosystem:cordova",
     "cordova-android"
   ],
-  "author": "Don Coleman",
+  "author": "BestBank",
   "license": "Apache-2",
   "bugs": {
-    "url": "https://github.com/don/cordova-plugin-hello/issues"
+    "url": "https://github.com/elrafael/cordova-plugin-screen-scraping/issues"
   },
-  "homepage": "https://github.com/don/cordova-plugin-hello#readme"
+  "homepage": "https://github.com/elrafael/cordova-plugin-screen-scraping#readme"
 }
