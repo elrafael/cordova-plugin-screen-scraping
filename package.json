@@ -1,6 +1,6 @@
 {
-  "name": "cordova-plugin-hello",
-  "version": "0.1.0",
+  "name": "cordova-plugin-screen-scraping",
+  "version": "0.0.1",
   "description": "Screen Scraping",
   "cordova": {
     "id": "cordova-plugin-screen-scraping",

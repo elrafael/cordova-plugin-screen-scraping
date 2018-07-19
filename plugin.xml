@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-        id="cordova-screen-scraping"
+        id="cordova-plugin-screen-scraping"
         version="0.0.1">
 
   <name>Cordova Screen Scraping</name>
