@@ -115,7 +115,7 @@ public class Hello extends CordovaPlugin {
                 String values = doc.select("div[class=content]").first().text();
                 String[] splited = values.split("\\s+");
 
-
+                // lorem ipsum
                 if (splited != null && splited.length > 0) {
                     saldoDisponivel = splited[5];
                     saldoDeConta.setBalance(saldoDisponivel);
