@@ -209,14 +209,19 @@ public class Hello extends CordovaPlugin {
                         .userAgent(USER_AGENT)
                         .get();
 
-                String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
+                // String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
                 String[] splited = values.split("\\s+");
 
-
-                if (splited != null && splited.length > 0) {
-                    movements = splited;
-                    result.setMovements(movements);
+                for (Element table : doc.select("table[class=rf-dt]")) {
+                    for (Element row : table.select("tr")) {
+                        Elements tds = row.select("td");
+                        movements.add(tds);
+                        if (tds.size() > 6) {
+                            System.out.println(tds.get(0).text() + ":" + tds.get(1).text());
+                        }
+                    }
                 }
+                result.setMovements(movements);
 
             } catch (IOException e) {
                 e.printStackTrace();
