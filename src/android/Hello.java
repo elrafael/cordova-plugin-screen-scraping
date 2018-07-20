@@ -8,6 +8,8 @@ import com.example.plugin.ScreenScrapingResult;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -210,7 +212,7 @@ public class Hello extends CordovaPlugin {
                         .get();
 
                 // String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
-                String[] splited = values.split("\\s+");
+                // String[] splited = values.split("\\s+");
 
                 for (Elements table : doc.select("table[class=rf-dt]")) {
                     for (Elements row : table.select("tr")) {
@@ -228,9 +230,9 @@ public class Hello extends CordovaPlugin {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getBalance()");
+                PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getMovements()");
                 pluginresult.setKeepCallback(false);
-                String message = "Erro a processar o pedido";
+                String message = "Erro ao retornar os movimentos";
                 mMyCallbackContext.success(message);
             }
 
@@ -239,13 +241,10 @@ public class Hello extends CordovaPlugin {
 
         @Override
         protected void onPostExecute(ScreenScrapingResult result) {
-            PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getBalance());
+            PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getMovements());
             pluginresult.setKeepCallback(false); 
-            //mMyCallbackContext.sendPluginResult(pluginresult);
-
-            //String message = "O Seu Saldo é de: " + result.getBalance() + " A la card";
-            String message = result.getBalance();
-            mMyCallbackContext.success(message);
+            List movements = result.getMovements();
+            mMyCallbackContext.success(movements);
         }
     }
 
