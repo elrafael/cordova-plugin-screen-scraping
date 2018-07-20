@@ -3,7 +3,7 @@
 exports.aLacard = function(name, successCallback, errorCallback) {
     cordova.exec(successCallback, errorCallback, "Hello", "aLacard", [name]);
 };
-exports.aLacard_movemnts = function(name, successCallback, errorCallback) {
+exports.aLacard_movements = function(name, successCallback, errorCallback) {
     cordova.exec(successCallback, errorCallback, "Hello", "aLacard_movements", [name]);
 };
 
