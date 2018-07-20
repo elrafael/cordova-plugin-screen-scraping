@@ -43,6 +43,26 @@ public class Hello extends CordovaPlugin {
             mMyCallbackContext.sendPluginResult(pluginResult);
             return true;
 
+        } else if (action.equals("aLacard_movements")) {    
+            this.mMyCallbackContext = callbackContext;
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT); 
+            pluginResult.setKeepCallback(true); 
+
+            try {
+                String user = data.getString(0);
+                String[] splited = user.split("\\s+");
+                new ScrapeAlacardMovements().execute(splited[0], splited[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getMovements()");
+                pluginresult.setKeepCallback(false);
+                String message = "Erro a processar os movimetos";
+                mMyCallbackContext.success(message);
+            }
+
+            mMyCallbackContext.sendPluginResult(pluginResult);
+            return true;
+
         } else if (action.equals("caixa")){
             this.mMyCallbackContext = callbackContext;
             PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT); 
@@ -115,7 +135,7 @@ public class Hello extends CordovaPlugin {
                 String values = doc.select("div[class=content]").first().text();
                 String[] splited = values.split("\\s+");
 
-                // lorem ipsum
+
                 if (splited != null && splited.length > 0) {
                     saldoDisponivel = splited[5];
                     saldoDeConta.setBalance(saldoDisponivel);
@@ -130,6 +150,83 @@ public class Hello extends CordovaPlugin {
             }
 
             return saldoDeConta;
+        }
+
+        @Override
+        protected void onPostExecute(ScreenScrapingResult result) {
+            PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getBalance());
+            pluginresult.setKeepCallback(false); 
+            //mMyCallbackContext.sendPluginResult(pluginresult);
+
+            //String message = "O Seu Saldo é de: " + result.getBalance() + " A la card";
+            String message = result.getBalance();
+            mMyCallbackContext.success(message);
+        }
+    }
+
+    private class ScrapeAlacardMovements extends AsyncTask<String, Void, ScreenScrapingResult> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ScreenScrapingResult doInBackground(String... params) {
+            List<String> movements = new ArrayList<String>();
+            ScreenScrapingResult result = new ScreenScrapingResult();
+
+            try {
+                final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2";
+                String loginFormUrl = "https://www.myedenred.pt/euroticket/pages/login.jsf";
+                String loginActionUrl = "https://www.myedenred.pt/euroticket/pages/login.jsf?windowId=cd3";
+
+                Connection.Response loginForm = Jsoup.connect(loginFormUrl)
+                        .method(Connection.Method.GET)
+                        .userAgent(USER_AGENT)
+                        .execute();
+
+                Map<String, String> loginCookies = loginForm.cookies();
+
+                Document loginDoc = loginForm.parse();
+                String authToken = loginDoc.select("input[name=javax.faces.ViewState]")
+                        .first()
+                        .attr("value");
+
+                Connection.Response login = Jsoup.connect(loginActionUrl)
+                        .userAgent(USER_AGENT)
+                        .data("loginform", "loginform")
+                        .data("loginform:username", params[0])
+                        .data("loginform:password", params[1])
+                        .data("loginform:loginButton", "Entrar")
+                        .data("javax.faces.ViewState", authToken)
+                        .cookies(loginCookies)
+                        .method(Connection.Method.POST)
+                        .execute();
+                loginCookies.putAll(login.cookies());
+
+                Document doc = Jsoup.connect("https://www.myedenred.pt/euroticket/pages/private/customer/customer.jsf?windowId=cd3")
+                        .cookies(loginCookies)
+                        .userAgent(USER_AGENT)
+                        .get();
+
+                String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
+                String[] splited = values.split("\\s+");
+
+
+                if (splited != null && splited.length > 0) {
+                    movements = splited;
+                    result.setMovements(movements);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getBalance()");
+                pluginresult.setKeepCallback(false);
+                String message = "Erro a processar o pedido";
+                mMyCallbackContext.success(message);
+            }
+
+            return result;
         }
 
         @Override
