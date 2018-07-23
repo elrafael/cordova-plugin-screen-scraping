@@ -5,7 +5,7 @@ import java.util.List;
 public class ScreenScrapingResult {
 
     private String balance;
-    private List<String> movements;
+    private String movements;
 
     public String getBalance() {
         return balance;
@@ -15,11 +15,11 @@ public class ScreenScrapingResult {
         this.balance = balance;
     }
 
-    public List<String> getMovements() {
+    public String getMovements() {
         return movements;
     }
 
-    public void setMovements(List<String> movements) {
+    public void setMovements(String movements) {
         this.movements = movements;
     }
 }
