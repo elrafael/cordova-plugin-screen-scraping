@@ -214,16 +214,15 @@ public class Hello extends CordovaPlugin {
                 // String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
                 // String[] splited = values.split("\\s+");
 
-                for (Elements table : doc.select("table[class=rf-dt]")) {
-                    for (Elements row : table.select("tr")) {
-                        Elemvents tds = row.select("td");
-                        movements.add(tds);
-                        if (tds.size() > 6) {
-                            System.out.println( tds.get(0).text() + ":" + 
-                                                tds.get(3).text() + ":" + 
-                                                tds.get(5).text() + ":" + 
-                                                tds.get(6).text());
-                        }
+                Elements movements = element.select("table[class=rf-dt] tr.rf-dt-r td");
+
+                for (Element movement : movements) {
+                    System.out.println(movements);
+                    System.out.println( movement.get(0).text() + ":" + 
+                                        movement.get(3).text() + ":" + 
+                                        movement.get(5).text() + ":" + 
+                                        movement.get(6).text());
+                        
                     }
                 }
                 result.setMovements(movements);
