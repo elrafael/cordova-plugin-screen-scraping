@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Hello extends CordovaPlugin {
@@ -174,7 +175,7 @@ public class Hello extends CordovaPlugin {
 
         @Override
         protected ScreenScrapingResult doInBackground(String... params) {
-            List<String> movements = new ArrayList<String>();
+            String movements = " ";
             ScreenScrapingResult result = new ScreenScrapingResult();
 
             try {
@@ -211,20 +212,24 @@ public class Hello extends CordovaPlugin {
                         .userAgent(USER_AGENT)
                         .get();
 
-                // String values = doc.select("table[class=rf-dt] tr.rf-dt-r td");
-                // String[] splited = values.split("\\s+");
-
-                Elements movements = element.select("table[class=rf-dt] tr.rf-dt-r td");
-
-                for (Element movement : movements) {
-                    System.out.println(movements);
-                    System.out.println( movement.get(0).text() + ":" + 
-                                        movement.get(3).text() + ":" + 
-                                        movement.get(5).text() + ":" + 
-                                        movement.get(6).text());
-                        
+                /*
+                    {
+                        "data" : "",
+                        "id" : "",
+                        "tipo" : "",
+                        "descricao" : "",
+                        "debito" : "",
+                        "credito" : "",
+                        "saldo" : ""
                     }
+                */        
+
+                Elements tds = doc.select("table[class=rf-dt] tr.rf-dt-r td");
+                movements = "{";
+                for (Element td : tds) {
+                    movements += "'"+td.id()+"' : '"+td.text()+"'";
                 }
+                movements += "}";
                 result.setMovements(movements);
 
             } catch (IOException e) {
@@ -242,7 +247,7 @@ public class Hello extends CordovaPlugin {
         protected void onPostExecute(ScreenScrapingResult result) {
             PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getMovements());
             pluginresult.setKeepCallback(false); 
-            List movements = result.getMovements();
+            String movements = result.getMovements();
             mMyCallbackContext.success(movements);
         }
     }
