@@ -8,7 +8,7 @@ import com.example.plugin.ScreenScrapingResult;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
