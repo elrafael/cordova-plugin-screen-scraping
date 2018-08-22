@@ -216,7 +216,14 @@ public class Hello extends CordovaPlugin {
                 try{
                     Elements rows = doc.select("table[class=rf-dt] tr.rf-dt-r");
                     JSONArray arrayMov = new JSONArray();
-        
+
+                    String saldoDisponivel = " ";
+                    String values = doc.select("div[class=content]").first().text();
+                    String[] splited = values.split("\\s+");
+                    if (splited != null && splited.length > 0) {
+                        saldoDisponivel = splited[5];
+                    }
+
                     for (int i = 0; i < rows.size(); i++) {
                         JSONObject mov = new JSONObject();
                         Element row = rows.get(i);
@@ -236,6 +243,7 @@ public class Hello extends CordovaPlugin {
                         arrayMov.put(mov);
                     }
                     movements.put("movements", arrayMov);
+                    movements.put("balance", saldoDisponivel);
                     // getProfile.getJSONObject ("data")
                     movementsResult.setMovements(movements);
                 } catch (Exception e) {
