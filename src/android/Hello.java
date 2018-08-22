@@ -240,8 +240,8 @@ public class Hello extends CordovaPlugin {
                     movementsResult.setMovements(movements);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    movements.put("movements", "");
-                    movementsResult.setMovements(movements);
+                    //movements.put("movements", "");
+                    //movementsResult.setMovements(movements);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
