@@ -213,32 +213,36 @@ public class Hello extends CordovaPlugin {
                         .cookies(loginCookies)
                         .userAgent(USER_AGENT)
                         .get();
-
-                Elements rows = doc.select("table[class=rf-dt] tr.rf-dt-r");
-                JSONArray arrayMov = new JSONArray();
-    
-                for (int i = 0; i < rows.size(); i++) {
-                    JSONObject mov = new JSONObject();
-                    Element row = rows.get(i);
-                    Elements cols = row.select("td");
-    
-                    mov.put("data",cols.get(0).text());
-                    mov.put("descricao",cols.get(3).text());
-                    if(cols.get(5).text().equals("0,00 €")){
-                        mov.put("valor","-" + cols.get(4).text()
-                                .replace(" €", "")
-                                /*.replace(",", ".")*/);
-                    }else{
-                        mov.put("valor","" + cols.get(5).text()
-                                .replace(" €", "")
-                                /*.replace(",", ".")*/);
+                try{
+                    Elements rows = doc.select("table[class=rf-dt] tr.rf-dt-r");
+                    JSONArray arrayMov = new JSONArray();
+        
+                    for (int i = 0; i < rows.size(); i++) {
+                        JSONObject mov = new JSONObject();
+                        Element row = rows.get(i);
+                        Elements cols = row.select("td");
+        
+                        mov.put("data",cols.get(0).text());
+                        mov.put("descricao",cols.get(3).text());
+                        if(cols.get(5).text().equals("0,00 €")){
+                            mov.put("valor","-" + cols.get(4).text()
+                                    .replace(" €", "")
+                                    /*.replace(",", ".")*/);
+                        }else{
+                            mov.put("valor","" + cols.get(5).text()
+                                    .replace(" €", "")
+                                    /*.replace(",", ".")*/);
+                        }
+                        arrayMov.put(mov);
                     }
-                    arrayMov.put(mov);
+                    movements.put("movements", arrayMov);
+                    // getProfile.getJSONObject ("data")
+                    movementsResult.setMovements(movements);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    movements.put("movements", "");
+                    movementsResult.setMovements(movements);
                 }
-                movements.put("movements", arrayMov);
-                // getProfile.getJSONObject ("data")
-                movementsResult.setMovements(movements);
-
             } catch (IOException e) {
                 e.printStackTrace();
                 PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getMovements()");
@@ -337,7 +341,8 @@ public class Hello extends CordovaPlugin {
         protected void onPostExecute(ScreenScrapingResult result) {
             PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getBalance());
             pluginresult.setKeepCallback(false); 
-            String message = "O Seu Saldo é de: " + result.getBalance() + "Caixa";
+            //String message = "O Seu Saldo é de: " + result.getBalance() + "Caixa";
+            String message = result.getBalance();
             mMyCallbackContext.success(message);
         }
     }
