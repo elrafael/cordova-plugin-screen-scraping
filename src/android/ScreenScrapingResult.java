@@ -1,11 +1,12 @@
 package com.example.plugin;
 
 import java.util.List;
+import org.json.JSONObject;
 
 public class ScreenScrapingResult {
 
     private String balance;
-    private String movements;
+    private JSONObject movements;
 
     public String getBalance() {
         return balance;
@@ -15,11 +16,11 @@ public class ScreenScrapingResult {
         this.balance = balance;
     }
 
-    public String getMovements() {
+    public JSONObject getMovements() {
         return movements;
     }
 
-    public void setMovements(String movements) {
+    public void setMovements(JSONObject movements) {
         this.movements = movements;
     }
 }

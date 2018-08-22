@@ -18,6 +18,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import org.json.JSONObject;
+
 public class Hello extends CordovaPlugin {
 
     // we need this callback when Task will finish
@@ -175,8 +177,8 @@ public class Hello extends CordovaPlugin {
 
         @Override
         protected ScreenScrapingResult doInBackground(String... params) {
-            String movements = " ";
-            ScreenScrapingResult result = new ScreenScrapingResult();
+            final JSONObject movements = new JSONObject();
+            ScreenScrapingResult movementsResult = new ScreenScrapingResult();
 
             try {
                 final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2";
@@ -212,42 +214,47 @@ public class Hello extends CordovaPlugin {
                         .userAgent(USER_AGENT)
                         .get();
 
-                /*
-                    {
-                        "data" : "",
-                        "id" : "",
-                        "tipo" : "",
-                        "descricao" : "",
-                        "debito" : "",
-                        "credito" : "",
-                        "saldo" : ""
+                Elements rows = doc.select("table[class=rf-dt] tr.rf-dt-r");
+                JSONArray arrayMov = new JSONArray();
+    
+                for (int i = 0; i < rows.size(); i++) {
+                    JSONObject mov = new JSONObject();
+                    Element row = rows.get(i);
+                    Elements cols = row.select("td");
+    
+                    mov.put("data",cols.get(0).text());
+                    mov.put("descricao",cols.get(3).text());
+                    if(cols.get(5).text().equals("0,00 €")){
+                        mov.put("valor","-" + cols.get(4).text()
+                                .replace(" €", "")
+                                /*.replace(",", ".")*/);
+                    }else{
+                        mov.put("valor","" + cols.get(5).text()
+                                .replace(" €", "")
+                                /*.replace(",", ".")*/);
                     }
-                */        
-
-                Elements tds = doc.select("table[class=rf-dt] tr.rf-dt-r td");
-                movements = "{";
-                for (Element td : tds) {
-                    movements += "'"+td.id()+"' : '"+td.text()+"'";
+                    arrayMov.put(mov);
                 }
-                movements += "}";
-                result.setMovements(movements);
+                movements.put("movements", arrayMov);
+                // getProfile.getJSONObject ("data")
+                movementsResult.setMovements(movements);
 
             } catch (IOException e) {
                 e.printStackTrace();
                 PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, "result.getMovements()");
                 pluginresult.setKeepCallback(false);
-                String message = "Erro ao retornar os movimentos";
+                String message = "Erro a processar o pedido";
                 mMyCallbackContext.success(message);
             }
 
-            return result;
+            return movementsResult;
         }
 
         @Override
         protected void onPostExecute(ScreenScrapingResult result) {
             PluginResult pluginresult = new PluginResult(PluginResult.Status.OK, result.getMovements());
             pluginresult.setKeepCallback(false); 
-            String movements = result.getMovements();
+            JSONObject movements = result.getMovements();
             mMyCallbackContext.success(movements);
         }
     }

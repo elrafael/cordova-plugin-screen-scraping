@@ -15,4 +15,5 @@ repositories {
 }
 dependencies {
 	implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.json:json:20180130'
 }
